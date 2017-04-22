@@ -10,14 +10,16 @@ public class Gravity : MonoBehaviour {
 
     const float EVENT_HORIZON_VELOCITY = 3F;
 
-    const float GRAVITY_MODIFIER = 0.05F;
-    const float GRAVITY_MODIFIER_MODIFIER = 0.00001F;
+    const float GRAVITY_MODIFIER_GOOD_ANGLE = 0.05F;
+    const float GRAVITY_MODIFIER_BAD_ANGLE = 1F;
+    const float GRAVITY_MODIFIER_MASS_MODIFIER = 0.00001F;
 
     const float ROTATIONAL_MODIFIER_SPARSE = 0.2F;
     const float ROTATIONAL_MODIFIER_DENSE = 1F;
 
-    const float MASS_LOWER_BOUNDS = 10;
-    const float MASS_UPPER_BOUNDS = 100;
+    const float ROTATIONAL_CUTOFF_ANGLE = 35f;
+
+    const float ROTATIONAL_ANGLE = 90f;
 
     public bool IsDoomed;
     public float Mass;
@@ -84,7 +86,9 @@ public class Gravity : MonoBehaviour {
             if (f > THRESHOLD) {
                 f = PerpetuateVelocity(f, rigidComponent);
 
-                gravitationalVelocity += CalculateGravitationalVelocity(dn, f, body.Mass);
+                var v = rigidComponent.velocity;
+
+                gravitationalVelocity += CalculateGravitationalVelocity(v, dn, f, body.Mass);
             }
         }
 
@@ -122,31 +126,61 @@ public class Gravity : MonoBehaviour {
         return f + gvm;
     }
 
-    private Vector2 CalculateGravitationalVelocity(Vector2 dn, float f, float bodyMass) {
-        var gravitationalVelocity = new Vector2();
+    private Vector2 CalculateGravitationalVelocity(Vector2 v, Vector2 dn, float f, float bodyMass) {
+        var gravity = GetGravity(dn, f);
 
+        var a = Vector2.Angle(v, dn);
+
+        var cross = Vector3.Cross(v, dn);
+
+        if (cross.z > 0)
+            a *= -1;
+
+        return ShouldCrash(v, a)
+            ? GetGravitationalVelocity(bodyMass, gravity)
+            : GetRotationalVelocity(bodyMass, gravity, a);
+    }
+
+    private Vector2 GetGravity(Vector2 dn, float f) {
         var gvm = _velocity.magnitude;
 
         if (gvm > VELOCITY_CAP)
             gvm = VELOCITY_CAP;
 
-        var gravity = dn * (f + gvm);
-
-        // TODO: Change this to be affected by angle of approach
-        var rotation = gravity.Rotate(-90F);
-
-        if (Mass < bodyMass) {
-            gravitationalVelocity += gravity * CalculateGravityMultiplier(bodyMass);
-            gravitationalVelocity += rotation * ROTATIONAL_MODIFIER_DENSE;
-        } else {
-            gravitationalVelocity += rotation * ROTATIONAL_MODIFIER_SPARSE;
-        }
-
-        return gravitationalVelocity;
+        return dn * (f + gvm);
     }
 
-    private float CalculateGravityMultiplier(float bodyMass) {
-        return GRAVITY_MODIFIER + (bodyMass * GRAVITY_MODIFIER_MODIFIER);
+    private bool ShouldCrash(Vector2 v, float a) {
+        if (v.x == 0 && v.y == 0)
+            return true;
+
+        return (a < ROTATIONAL_CUTOFF_ANGLE && a > (ROTATIONAL_CUTOFF_ANGLE * -1));
+    }
+
+    private Vector2 GetGravitationalVelocity(float bodyMass, Vector2 gravity) {
+        return gravity * GRAVITY_MODIFIER_BAD_ANGLE;
+    }
+
+    private Vector2 GetRotationalVelocity(float bodyMass, Vector2 gravity, float a) {
+        var rotationalVelocity = new Vector2();
+
+        var rotation = (a < 0)
+            ? gravity.Rotate(ROTATIONAL_ANGLE * -1)
+            : gravity.Rotate(ROTATIONAL_ANGLE);
+
+        if (Mass < bodyMass) {
+            rotationalVelocity += gravity * CalculateGoodGravityMultiplier(bodyMass);
+            rotationalVelocity += rotation * ROTATIONAL_MODIFIER_DENSE;
+        }
+        else {
+            rotationalVelocity += rotation * ROTATIONAL_MODIFIER_SPARSE;
+        }
+
+        return rotationalVelocity;
+    }
+
+    private float CalculateGoodGravityMultiplier(float bodyMass) {
+        return GRAVITY_MODIFIER_GOOD_ANGLE + (bodyMass * GRAVITY_MODIFIER_MASS_MODIFIER);
     }
 
     private void SetVelocity() {

@@ -13,11 +13,11 @@
 
 - put in planet physics
 	-> rotation
-	- rotation based on side
+	-> rotation based on side
 	- bounce
 	-> relative to mass
 
-- get the player moving
+-> get the player moving
 
 -> everything rotates around black hole
 -> everything gets slowly sucked towards black hole
@@ -34,7 +34,9 @@
 
 - camera follow player
 
-- tweak player movement to be way weaker
+- tweak player movement
+	- weaker normally?
+	- stronger going with the current of gravity
 
 - camera moves around properly
 
