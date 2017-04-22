@@ -69,7 +69,7 @@ public class Planet : MonoBehaviour {
         var d = (Vector2)(blackHoleObject.transform.position - transform.position);
         var dn = d.normalized;
 
-        var a = Random.Range(0, 1) == 1
+        var a = Random.value < 0.5
             ? ROTATIONAL_ANGLE
             : ROTATIONAL_ANGLE * -1;
 
