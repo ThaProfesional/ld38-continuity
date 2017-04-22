@@ -13,21 +13,24 @@
 
 - put in planet physics
 	-> rotation
+	- rotation based on side
 	- bounce
 	-> relative to mass
-	- randomly generate mass
 
 - get the player moving
-	
-- randomly generate other planets
 
-- everything rotates around black hole
-- everything gets slowly sucked towards black hole
+-> everything rotates around black hole
+-> everything gets slowly sucked towards black hole
 - things that hit black hole get killed
 - black hole grows physically bigger
 - and this causes energy to increase
 - black hole has life / food meter
 - pull in stops when full
+
+- randomly generate other planets
+- randomly generate mass
+
+- camera follow player
 
 - tweak player movement to be way weaker
 

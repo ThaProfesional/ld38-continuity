@@ -7,26 +7,25 @@ public class Gravity : MonoBehaviour {
     const float G = 1F;
     const float THRESHOLD = 0.1F;
 
-    const float VELOCITY_CAP = 2F;
+    const float VELOCITY_CAP = 1F;
 
     const float GRAVITY_MODIFIER = 0.05F;
+    const float GRAVITY_MODIFIER_MODIFIER = 0.00001F;
+
     const float ROTATIONAL_MODIFIER_SPARSE = 0.2F;
     const float ROTATIONAL_MODIFIER_DENSE = 1F;
 
     const float MASS_LOWER_BOUNDS = 10;
     const float MASS_UPPER_BOUNDS = 100;
 
-    private Vector2 _gravitationalVelocity;
-
-    private float _mass;
     public float Mass;
 
     void Start () {
-        _mass = Mass;
+        if(Mass == 0) {
+            var rigidComponent = GetComponent<Rigidbody2D>();
 
-        if (_mass == 0) {
-            _mass = Random.Range(MASS_LOWER_BOUNDS, MASS_UPPER_BOUNDS);
-        }
+            Mass = rigidComponent.mass;
+        } 
     }
 	
 	void Update () {
@@ -34,25 +33,32 @@ public class Gravity : MonoBehaviour {
 	}
 
     void FixedUpdate() {
-        var bodies = GetPlanetaryBodies();
+        var rigidComponent = GetComponent<Rigidbody2D>();
 
-        foreach (var body in bodies) {
-            var d = (Vector2)(transform.position - body.transform.position);
-            var dm = d.magnitude;
-            var dn = d.normalized;
+        var _gravitationalVelocity = new Vector2();
 
-            var f = GetGravtiationalForce(body.Mass, dm);
+        if (rigidComponent != null) {
+            var bodies = GetPlanetaryBodies();
 
-            if (f > THRESHOLD) {
-                var rigidComponent = GetRigidbody2dComponent(body);
+            foreach (var body in bodies) {
+                if (rigidComponent != null)
+                {
+                    var d = (Vector2)(body.transform.position - transform.position);
+                    var dm = d.magnitude;
+                    var dn = d.normalized;
 
-                if (rigidComponent != null) {
-                    CalculateGravitationalVelocity(dn, f, Mass, body.Mass);
+                    var f = GetGravtiationalForce(body.Mass, dm);
 
-                    rigidComponent.velocity = _gravitationalVelocity;
+                    f = PerpetuateVelocity(f, rigidComponent);
+
+                    if (f > THRESHOLD) {
+                        _gravitationalVelocity += CalculateGravitationalVelocity(dn, f, body.Mass);
+                    }
                 }
             }
         }
+
+        rigidComponent.velocity = _gravitationalVelocity;
     }
 
     private IList<Gravity> GetPlanetaryBodies() {
@@ -62,15 +68,21 @@ public class Gravity : MonoBehaviour {
     }
 
     private float GetGravtiationalForce(float bodyMass, float dm) {
-        return G * ((Mass / bodyMass) / (dm * dm));
+        return G * ((bodyMass / Mass) / (dm * dm));
     }
 
-    private Rigidbody2D GetRigidbody2dComponent(Gravity body) {
-        var bodyObject = body.gameObject;
-        return bodyObject.GetComponent<Rigidbody2D>();
+    private float PerpetuateVelocity(float f, Rigidbody2D rigidComponent) {
+        var gvm = rigidComponent.velocity.magnitude;
+
+        if (gvm > VELOCITY_CAP)
+            gvm = VELOCITY_CAP;
+
+        return f + gvm;
     }
 
-    private void CalculateGravitationalVelocity(Vector2 dn, float f, float mass1, float mass2) {
+    private Vector2 CalculateGravitationalVelocity(Vector2 dn, float f, float bodyMass) {
+        var _gravitationalVelocity = new Vector2();
+
         var gvm = _gravitationalVelocity.magnitude;
 
         if (gvm > VELOCITY_CAP)
@@ -78,13 +90,20 @@ public class Gravity : MonoBehaviour {
 
         var gravity = dn * (f + gvm);
 
+        // TODO: Change this to be affected by angle of approach
         var rotation = gravity.Rotate(-90F);
 
-        if (mass1 > mass2) {
-            _gravitationalVelocity = gravity * GRAVITY_MODIFIER;
+        if (Mass < bodyMass) {
+            _gravitationalVelocity += gravity * CalculateGravityMultiplier(bodyMass);
             _gravitationalVelocity += rotation * ROTATIONAL_MODIFIER_DENSE;
         } else {
-            _gravitationalVelocity = rotation * ROTATIONAL_MODIFIER_SPARSE;
+            _gravitationalVelocity += rotation * ROTATIONAL_MODIFIER_SPARSE;
         }
+
+        return _gravitationalVelocity;
+    }
+
+    private float CalculateGravityMultiplier(float bodyMass) {
+        return GRAVITY_MODIFIER + (bodyMass * GRAVITY_MODIFIER_MODIFIER);
     }
 }
