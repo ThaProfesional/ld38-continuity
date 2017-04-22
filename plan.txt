@@ -1,26 +1,25 @@
 -> think up idea => est. 60 minutes - took 50 (11:00 -> 11:50)
-- rest of plan => est. 30 minutes - took 10 (11:50 -> 12:00)
+-> rest of plan => est. 30 minutes - took 10 (11:50 -> 12:00)
 
-- think up a name => est. 15 minutes - took 15 (12:00 -> 12:15)
-- make project => est. 15 minutes - took 2 (12:15 -> 12:17)
-- push to git => est. 15 minutes -  
+-> think up a name => est. 15 minutes - took 15 (12:00 -> 12:15)
+-> make project => est. 15 minutes - took 2 (12:15 -> 12:17)
+-> push to git => est. 15 minutes -  took 32 (12:17 -> 12:44)
 
-- make worlds crappiest planet and black hole assets
-- get them into unity
-- get them on screen
+-> make worlds crappiest planet and black hole assets
+-> get them into unity
+-> get them on screen (as prefabs)
 
-- build black hole
-
-- make a player
-- get the player moving
-
-- randomly generate other planets
+-> make a player
 
 - put in planet physics
-	- rotation
+	-> rotation
 	- bounce
-	- relative to mass
+	-> relative to mass
 	- randomly generate mass
+
+- get the player moving
+	
+- randomly generate other planets
 
 - everything rotates around black hole
 - everything gets slowly sucked towards black hole
@@ -30,7 +29,15 @@
 - black hole has life / food meter
 - pull in stops when full
 
+- tweak player movement to be way weaker
+
+- camera moves around properly
+
 - get planets colliding and shit
+
+- tweak sizes?
+
+- too far from the stage = slowly drawn back in
 
 - core gameplay mechanics stage 1 done?
 
@@ -45,6 +52,10 @@
 - get in game
 
 - plan stage 2 => est. 30 minutes
+
+- new name from http://www.azlyrics.com/lyrics/soundgarden/blackholesun.html ?
+
+- multi-rotate?
 
 
 
