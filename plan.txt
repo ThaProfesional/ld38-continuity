@@ -21,11 +21,13 @@
 
 -> everything rotates around black hole
 -> everything gets slowly sucked towards black hole
-- things that hit black hole get killed
+-> things that hit black hole get killed
 - black hole grows physically bigger
 - and this causes energy to increase
 - black hole has life / food meter
 - pull in stops when full
+
+- points
 
 - randomly generate other planets
 - randomly generate mass

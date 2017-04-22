@@ -3,8 +3,8 @@
 public class BlackHole : MonoBehaviour {
 
 	void Start () {
-		
-	}
+
+    }
 	
 	void Update () {
 		
@@ -16,20 +16,21 @@ public class BlackHole : MonoBehaviour {
         // also grow bigger
     }
 
-    void OnTriggerEnter2D(Collision2D coll)
-    {
-        Suck(coll.gameObject);
-        /*
-        if (coll.gameObject.tag == "Enemy")
-            coll.gameObject.SendMessage("ApplyDamage", 10);
-       */
+    void OnTriggerEnter2D(Collider2D other) {
+        var planet = other.gameObject;
 
+        var gravityComponent = planet.GetComponent<Gravity>();
+
+        gravityComponent.IsDoomed = true;
     }
 
-    private void Suck(GameObject planet) {
-        var t = 1;
-        // disable gravity
+    void OnTriggerStay2D(Collider2D other) {
+        var blackHoleColliderComponent = GetComponent<Collider2D>();
 
-        // pull straight in
+        if (blackHoleColliderComponent.bounds.Contains(other.bounds.min)
+            && blackHoleColliderComponent.bounds.Contains(other.bounds.max)) {
+            Destroy(other.gameObject);
+        }
+
     }
 }
