@@ -38,6 +38,11 @@ public class Player : MonoBehaviour {
         if (gravityComponent != null)
             velocity += gravityComponent.Velocity;
 
+        var planetComponent = GetComponent<Planet>();
+
+        if (planetComponent != null)
+            velocity += planetComponent.Velocity;
+
         var rigidComponent = GetComponent<Rigidbody2D>();
 
         rigidComponent.velocity = velocity;

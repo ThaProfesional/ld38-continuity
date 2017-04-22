@@ -17,9 +17,9 @@ public class Gravity : MonoBehaviour {
     const float ROTATIONAL_MODIFIER_SPARSE = 0.2F;
     const float ROTATIONAL_MODIFIER_DENSE = 1F;
 
-    const float ROTATIONAL_CUTOFF_ANGLE = 35f;
+    const float ROTATIONAL_CUTOFF_ANGLE = 35F;
 
-    const float ROTATIONAL_ANGLE = 90f;
+    const float ROTATIONAL_ANGLE = 90F;
 
     public bool IsDoomed;
     public float Mass;
@@ -190,6 +190,11 @@ public class Gravity : MonoBehaviour {
 
         if (playerComponent != null)
             velocity += playerComponent.Velocity;
+
+        var planetComponent = GetComponent<Planet>();
+
+        if (planetComponent != null)
+            velocity += planetComponent.Velocity;
 
         var rigidComponent = GetComponent<Rigidbody2D>();
 

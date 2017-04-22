@@ -11,10 +11,10 @@
 
 -> make a player
 
-- put in planet physics
+-> put in planet physics
 	-> rotation
 	-> rotation based on side
-	- bounce
+	-> bounce
 	-> relative to mass
 
 -> get the player moving
@@ -31,6 +31,8 @@
 
 - randomly generate other planets
 - randomly generate mass
+
+- player planet needs to get pulled in as well
 
 - camera follow player
 
