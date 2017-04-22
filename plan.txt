@@ -22,25 +22,32 @@
 -> everything rotates around black hole
 -> everything gets slowly sucked towards black hole
 -> things that hit black hole get killed
-- black hole grows physically bigger
-- and this causes energy to increase
+-> black hole grows physically bigger
+-> and this causes energy to increase
 - black hole has life / food meter
-- pull in stops when full
+ - http://answers.unity3d.com/questions/787137/sprite-masking.html
+- put in stops when full
+	- enough food
 
 - points
+
+- player dies = game over
 
 - randomly generate other planets
 - randomly generate mass
 
 - player planet needs to get pulled in as well
 
-- camera follow player
+- camera moves around properly
+	- camera follow player
 
 - tweak player movement
 	- weaker normally?
 	- stronger going with the current of gravity
 
-- camera moves around properly
+- black hole grows smoothly
+	- with easing?
+	- same with fullness bar
 
 - get planets colliding and shit
 
@@ -55,6 +62,7 @@
 	- planet
 	- black hole
 	- other planets
+	- black hole life bar
 - make music
 - get music in game
 - make sound effects

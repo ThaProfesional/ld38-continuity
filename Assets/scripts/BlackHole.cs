@@ -1,19 +1,15 @@
 ﻿using UnityEngine;
 
 public class BlackHole : MonoBehaviour {
+    const float MASS_MODIFIER = 10F;
+    const float SIZE_MODIFIER = 8F;
 
-	void Start () {
+    void Start() {
 
     }
-	
-	void Update () {
-		
-	}
 
-    void FixedUpdate() {
-        // TODO: when a planet's completely contained - remove it
+    void Update() {
 
-        // also grow bigger
     }
 
     void OnTriggerEnter2D(Collider2D other) {
@@ -29,8 +25,20 @@ public class BlackHole : MonoBehaviour {
 
         if (blackHoleColliderComponent.bounds.Contains(other.bounds.min)
             && blackHoleColliderComponent.bounds.Contains(other.bounds.max)) {
+            Grow(other.gameObject);
+
             Destroy(other.gameObject);
         }
+    }
 
+    private void Grow(GameObject planet) {
+        var gravityComponent = GetComponent<Gravity>();
+        var planetGravityComponent = planet.GetComponent<Gravity>();
+
+        var increase = planetGravityComponent.Mass / (gravityComponent.Mass + planetGravityComponent.Mass);
+
+        gravityComponent.Mass += gravityComponent.Mass * increase * MASS_MODIFIER;
+
+        transform.localScale += transform.localScale * increase * SIZE_MODIFIER;
     }
 }
