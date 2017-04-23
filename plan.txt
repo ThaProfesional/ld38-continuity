@@ -71,7 +71,7 @@ FREAKING OUT TODO:
 
 -> player can still go way out of bounds
 
-- tweak player movement
+-> tweak player movement
 
 - make sounds effects
 - make music

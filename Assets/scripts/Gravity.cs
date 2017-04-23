@@ -8,15 +8,15 @@ public class Gravity : MonoBehaviour {
 
     const float VELOCITY_CAP = 1.5F;
 
-    const float EVENT_HORIZON_VELOCITY_MULTIPLIER = 1F;
-    const float EVENT_HORIZON_MAX_VELOCITY = 3F;
+    const float EVENT_HORIZON_VELOCITY_MULTIPLIER = 4F;
+    const float EVENT_HORIZON_MAX_VELOCITY = 4F;
 
     const float GRAVITY_MODIFIER_GOOD_ANGLE = 0.2F;
     const float GRAVITY_MODIFIER_BAD_ANGLE = 1F;
     const float GRAVITY_MODIFIER_MASS_MODIFIER = 0.0001F;
 
-    const float ROTATIONAL_MODIFIER_SPARSE = 0.3F;
-    const float ROTATIONAL_MODIFIER_DENSE = 0.6F;
+    const float ROTATIONAL_MODIFIER_SPARSE = 0.2F;
+    const float ROTATIONAL_MODIFIER_DENSE = 0.4F;
 
     const float ROTATIONAL_CUTOFF_ANGLE = 35F;
 

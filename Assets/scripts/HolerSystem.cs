@@ -16,7 +16,7 @@ public class HolerSystem : MonoBehaviour {
     const int PLANET_MAX_MASS = 50;
 
     const int MAX_TOTAL_PLANET_MASS = 200;
-    const int MAX_PLANETS = 1;//8;
+    const int MAX_PLANETS = 8;
 
     const int DANGER_ZONE = 5;
     const int EDGE = 20;
@@ -63,9 +63,9 @@ public class HolerSystem : MonoBehaviour {
     private void Generate() {
         CreateBlackHole();
 
-        CreatePlanets();
-
         CreatePlayer();
+
+        CreatePlanets();
 
         // start countdown timer to DOOM!
         StartCoroutine("EnableHole");
