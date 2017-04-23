@@ -24,22 +24,29 @@
 -> things that hit black hole get killed
 -> black hole grows physically bigger
 -> and this causes energy to increase
-- black hole has life / food meter
- - http://answers.unity3d.com/questions/787137/sprite-masking.html
-- put in stops when full
-	- enough food
-
-- points
-
-- player dies = game over
+-> black hole has life / food meter
+ -> http://answers.unity3d.com/questions/787137/sprite-masking.html
+-> put in stops when full
+	
+-> player dies = game over
 
 - randomly generate other planets
 - randomly generate mass
+- randomly position player
 
-- player planet needs to get pulled in as well
+- "arena size"
+
+- points
+
+- tie this together with game over
+	- regenerate level after death
 
 - camera moves around properly
 	- camera follow player
+	- UI sits properly at top of camera
+	- contents offset by ui kind of thing
+	
+- AI
 
 - tweak player movement
 	- weaker normally?
@@ -49,11 +56,12 @@
 	- with easing?
 	- same with fullness bar
 
-- get planets colliding and shit
-
 - tweak sizes?
 
 - too far from the stage = slowly drawn back in
+- try to get stable orbits running
+
+- position status stuff programatically maybe?
 
 - core gameplay mechanics stage 1 done?
 
@@ -68,14 +76,15 @@
 - make sound effects
 - get in game
 
+- levels?
+
 - plan stage 2 => est. 30 minutes
 
 - new name from http://www.azlyrics.com/lyrics/soundgarden/blackholesun.html ?
 
-- multi-rotate?
 
 
-
+- asteroids and shit
 
 - planets have speech bubbles
 - planets scream as they die

@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 
 public class BlackHole : MonoBehaviour {
-    const float MASS_MODIFIER = 10F;
+    public const float MASS_MODIFIER = 10F;
     const float SIZE_MODIFIER = 8F;
 
     void Start() {
@@ -27,6 +27,9 @@ public class BlackHole : MonoBehaviour {
             && blackHoleColliderComponent.bounds.Contains(other.bounds.max)) {
             Grow(other.gameObject);
 
+            if (other.gameObject.GetComponent<Player>() != null)
+                Lose();
+
             Destroy(other.gameObject);
         }
     }
@@ -37,8 +40,22 @@ public class BlackHole : MonoBehaviour {
 
         var increase = planetGravityComponent.Mass / (gravityComponent.Mass + planetGravityComponent.Mass);
 
-        gravityComponent.Mass += gravityComponent.Mass * increase * MASS_MODIFIER;
+        // TODO: deal with rounding errors
+        gravityComponent.Mass += (int)(gravityComponent.Mass * increase * MASS_MODIFIER);
 
         transform.localScale += transform.localScale * increase * SIZE_MODIFIER;
+    }
+
+    private void Lose() {
+        var gravityComponent = GetComponent<Gravity>();
+        gravityComponent.DisablePull = true;
+
+        var winObject = GameObject.Find("Camera/Win");
+        var winSpriteRenderComponent = winObject.GetComponent<SpriteRenderer>();
+        winSpriteRenderComponent.enabled = false;
+
+        var loseObject = GameObject.Find("Camera/Lose");
+        var loseSpriteRenderComponent = loseObject.GetComponent<SpriteRenderer>();
+        loseSpriteRenderComponent.enabled = true;
     }
 }

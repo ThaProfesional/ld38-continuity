@@ -21,6 +21,7 @@ public class Gravity : MonoBehaviour {
 
     const float ROTATIONAL_ANGLE = 90F;
 
+    public bool DisablePull;
     public bool IsDoomed;
     public float Mass;
 
@@ -32,7 +33,7 @@ public class Gravity : MonoBehaviour {
     }
 
     void Start () {
-        if(Mass == 0) {
+        if (Mass == 0) {
             var rigidComponent = GetComponent<Rigidbody2D>();
 
             Mass = rigidComponent.mass;
@@ -88,7 +89,7 @@ public class Gravity : MonoBehaviour {
 
                 var v = rigidComponent.velocity;
 
-                gravitationalVelocity += CalculateGravitationalVelocity(v, dn, f, body.Mass);
+                gravitationalVelocity += CalculateGravitationalVelocity(v, dn, f, body.Mass, body.DisablePull);
             }
         }
 
@@ -126,7 +127,7 @@ public class Gravity : MonoBehaviour {
         return f + gvm;
     }
 
-    private Vector2 CalculateGravitationalVelocity(Vector2 v, Vector2 dn, float f, float bodyMass) {
+    private Vector2 CalculateGravitationalVelocity(Vector2 v, Vector2 dn, float f, float bodyMass, bool bodyDisablePull) {
         var gravity = GetGravity(dn, f);
 
         var a = Vector2.Angle(v, dn);
@@ -136,9 +137,9 @@ public class Gravity : MonoBehaviour {
         if (cross.z > 0)
             a *= -1;
 
-        return ShouldCrash(v, a)
+        return ShouldCrash(v, a, bodyDisablePull)
             ? GetGravitationalVelocity(bodyMass, gravity)
-            : GetRotationalVelocity(bodyMass, gravity, a);
+            : GetRotationalVelocity(bodyMass, gravity, a, bodyDisablePull);
     }
 
     private Vector2 GetGravity(Vector2 dn, float f) {
@@ -150,7 +151,10 @@ public class Gravity : MonoBehaviour {
         return dn * (f + gvm);
     }
 
-    private bool ShouldCrash(Vector2 v, float a) {
+    private bool ShouldCrash(Vector2 v, float a, bool bodyDisablePull) {
+        if (bodyDisablePull)
+            return false;
+
         if (v.x == 0 && v.y == 0)
             return true;
 
@@ -161,7 +165,7 @@ public class Gravity : MonoBehaviour {
         return gravity * GRAVITY_MODIFIER_BAD_ANGLE;
     }
 
-    private Vector2 GetRotationalVelocity(float bodyMass, Vector2 gravity, float a) {
+    private Vector2 GetRotationalVelocity(float bodyMass, Vector2 gravity, float a, bool bodyDisablePull) {
         var rotationalVelocity = new Vector2();
 
         var rotation = (a < 0)
@@ -169,7 +173,9 @@ public class Gravity : MonoBehaviour {
             : gravity.Rotate(ROTATIONAL_ANGLE);
 
         if (Mass < bodyMass) {
-            rotationalVelocity += gravity * CalculateGoodGravityMultiplier(bodyMass);
+            if (!bodyDisablePull)
+                rotationalVelocity += gravity * CalculateGoodGravityMultiplier(bodyMass);
+
             rotationalVelocity += rotation * ROTATIONAL_MODIFIER_DENSE;
         }
         else {
