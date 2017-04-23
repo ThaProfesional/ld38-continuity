@@ -1,43 +1,41 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class Planet : MonoBehaviour {
-    const float BOUNCE_MODIFIER = 2F;
-    const float BOUNCE_ENTROPY_MINIMUM = 0.8F;
-    const float BOUNCE_THRESHOLD = 0.5F;
+    const float BOUNCE_MODIFIER = 15F;
+    const float BOUNCE_ENTROPY_MINIMUM = 0.4F;
+    const float BOUNCE_THRESHOLD = 0.8F;
+
+    const float MINIMUM_BOUNCE = 1F;
 
     const float START_VELOCITY = 0.1F;
 
     const float ROTATIONAL_ANGLE = 90F;
 
-    private List<Vector2> _velocities;
-    public Vector2 Velocity {
-        get {
-            var v = new Vector2();
+    const float ENTROPY_RATE = 0.35F;
 
-            foreach (var velocity in _velocities)
-                v += velocity;
+    public Vector2 Velocity;
 
-            return v;
-        }
-    }
+    private Rigidbody2D _rigid;
 
-    void Awake() {
-        _velocities = new List<Vector2>();
+    private void Awake() {
+        _rigid = GetComponent<Rigidbody2D>();
+
+        Velocity = new Vector2();
     }
 
     void FixedUpdate() {
-        _velocities = _velocities.Select(x => {
-            var entropy = x / 20;
+        var entropy = Velocity * ENTROPY_RATE;
 
-            if (entropy.magnitude < BOUNCE_ENTROPY_MINIMUM)
-                entropy = entropy.normalized * BOUNCE_ENTROPY_MINIMUM;
+        if (entropy.magnitude < BOUNCE_ENTROPY_MINIMUM)
+            entropy = entropy.normalized * BOUNCE_ENTROPY_MINIMUM;
 
-            return x - entropy;
-        }).ToList();
+        Velocity -= entropy;
 
-        _velocities.RemoveAll(x => x.magnitude < BOUNCE_THRESHOLD);
+        if (Velocity.magnitude <= BOUNCE_THRESHOLD)
+            Velocity = new Vector2(0, 0);
+
+        if (OutOfBounds())
+            GetBackInBounds();
 
         SetVelocity();
     }
@@ -48,22 +46,25 @@ public class Planet : MonoBehaviour {
         var blackHoleComponent = planet.GetComponent<BlackHole>();
 
         if (blackHoleComponent == null) {
-            var gravityComponent = GetComponent<Gravity>();
-            var planetGravityComponent = planet.GetComponent<Gravity>();
+            var v = new Vector2();
 
-            var mass = gravityComponent.Mass;
-            var planetMass = planetGravityComponent.Mass;
+            if (other.relativeVelocity.x != 0 || other.relativeVelocity.y != 0) {
+                var gravityComponent = GetComponent<Gravity>();
+                var planetGravityComponent = planet.GetComponent<Gravity>();
 
-            var massModifier = planetMass / (mass + planetMass);
+                var mass = gravityComponent.Mass;
+                var planetMass = planetGravityComponent.Mass;
 
-            var v = other.relativeVelocity * massModifier * BOUNCE_MODIFIER;
+                var massModifier = planetMass / (mass + planetMass);
 
-            _velocities.Add(v);
+                v = other.relativeVelocity * massModifier * BOUNCE_MODIFIER;
+            }
+
+            if (v.magnitude < MINIMUM_BOUNCE)
+                v = v.normalized * MINIMUM_BOUNCE;
+
+            Velocity += v;
         }
-    }
-
-    public void PushVelocity(Vector2 v) {
-        _velocities.Add(v);
     }
 
     private void SetVelocity() {
@@ -79,8 +80,18 @@ public class Planet : MonoBehaviour {
         if (gravityComponent != null)
             velocity += gravityComponent.Velocity;
 
-        var rigidComponent = GetComponent<Rigidbody2D>();
+        _rigid.velocity = velocity;
+    }
 
-        rigidComponent.velocity = velocity;
+    private bool OutOfBounds() {
+        return gameObject.transform.position.x > HolerSystem.BOUNDS
+            || gameObject.transform.position.y > HolerSystem.BOUNDS;
+    }
+
+    private void GetBackInBounds() {
+        var newPosition = gameObject.transform.position.normalized * (HolerSystem.BOUNDS - 1);
+        gameObject.transform.position = newPosition;
+
+        Velocity = _rigid.velocity * -1;
     }
 }

@@ -1,26 +1,32 @@
 ﻿using UnityEngine;
 
 public class Fullness : MonoBehaviour {
+    private GameObject _holerSystem;
+
     private float _hunger;
     private float _previousPercentage;
     private float _startMass;
 
 	void Start() {
+        _holerSystem = GameObject.Find("Holer System");
+
         Initialise();
     }
 
     void Update () {
         var blackHoleGravityComponent = GetBlackHoleGravity();
 
-        var currentMass = blackHoleGravityComponent.Mass - _startMass;
+        if (blackHoleGravityComponent != null) {
+            var currentMass = blackHoleGravityComponent.Mass - _startMass;
 
-        var percentage = currentMass / _hunger;
+            var percentage = currentMass / _hunger;
 
-        if (percentage > _previousPercentage) {
-            SetPercentage(percentage);
+            if (percentage > _previousPercentage) {
+                SetPercentage(percentage);
 
-            if (percentage >= 1)
-                Win(blackHoleGravityComponent);
+                if (percentage >= 1)
+                    Win(blackHoleGravityComponent);
+            }
         }
     }
 

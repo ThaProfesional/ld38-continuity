@@ -19,14 +19,13 @@ public class HolerSystem : MonoBehaviour {
 
     const int DANGER_ZONE = 5;
     const int EDGE = 20;
+    public const int BOUNDS = 30;
 
     const float START_VELOCITY = 0.1F;
 
     const float ROTATIONAL_ANGLE = 90F;
 
     const float START_TIME = 5F;
-
-    public bool EnableReset;
 
     public readonly IList<string> PLANET_SPRITES = new List<string> {
         "planet",
@@ -35,18 +34,20 @@ public class HolerSystem : MonoBehaviour {
 
     public int PlanetaryMass;
 
+    private PlanetTracker _planetTracker;
+
     void Awake() {
+        _planetTracker = gameObject.GetComponent<PlanetTracker>();
+
         Generate();
     }
 
     private void Update() {
-        if (EnableReset && Input.GetKeyDown("r"))
+        if (Input.GetKeyDown("r"))
             Regenerate();
     }
 
     public void Regenerate() {
-        EnableReset = false;
-
         Clear();
 
         Generate();
@@ -133,6 +134,8 @@ public class HolerSystem : MonoBehaviour {
         planetColliderComponent.radius = planetSpriteRendererComponent.sprite.bounds.size.x / 2;
 
         SetInitialVelocity(planetInstance);
+
+        _planetTracker.AddPlanet(planetInstance);
     }
 
     private void CreatePlayer() {
@@ -147,6 +150,8 @@ public class HolerSystem : MonoBehaviour {
         playerGravityComponent.Mass = PLAYER_MASS;
 
         SetInitialVelocity(playerInstance);
+
+        _planetTracker.AddPlanet(playerInstance);
     }
 
     private Vector3 GetRandomPosition() {
@@ -179,17 +184,20 @@ public class HolerSystem : MonoBehaviour {
     // don't judge me (or do - I'm not your boss)
     private void SetInitialVelocity(GameObject planet) {
         var blackHoleObject = GameObject.Find("Black Hole");
-        var d = (Vector2)(blackHoleObject.transform.position - transform.position);
-        var dn = d.normalized;
 
-        var a = Random.value < 0.5F
-            ? ROTATIONAL_ANGLE
-            : ROTATIONAL_ANGLE * -1;
+        if (blackHoleObject != null) {
+            var d = (Vector2)(blackHoleObject.transform.position - transform.position);
+            var dn = d.normalized;
 
-        dn = dn.Rotate(a);
+            var a = Random.value < 0.5F
+                ? ROTATIONAL_ANGLE
+                : ROTATIONAL_ANGLE * -1;
 
-        var planetComponent = planet.GetComponent<Planet>();
-        planetComponent.PushVelocity(dn);
+            dn = dn.Rotate(a);
+
+            var planetComponent = planet.GetComponent<Planet>();
+            planetComponent.Velocity += dn;
+        }
     }
 
     private IEnumerator EnableHole() {

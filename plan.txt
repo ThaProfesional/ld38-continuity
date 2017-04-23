@@ -45,22 +45,37 @@
 	-> camera follow player
 	-> UI sits properly at top of camera
 	
+-> change planet velocity back to be a single value - not a list
+
+-> make better assets
+	-> background
+	-> planet
+	-> black hole
+	-> other planets
+	-> black hole life bar
+	
 	
 FREAKING OUT TODO: 
 -> tiling background
 -> put in new bar
 -> put in new text
-- proper arena bounds
-- minimum on bounce
+-> minimum on bounce
+-> proper arena bounds
 - indicators for stuff
 - don't spawn too close
 
 - keep writing this list
 
+
+
 - make sounds effects
 - make music
-- splash page instructions 
+
+-tweak way down rotational gravity for planets
+
 - AI
+
+- splash page instructions 
 
 - points
 
@@ -82,8 +97,6 @@ FREAKING OUT TODO:
 - TWEAK: camera leading and slack
 - TWEAK: camera "center" pushed lower by UI
 
-- change planet velocity back to be a single value - not a list
-
 - too far from the stage = slowly drawn back in
 - try to get stable orbits running
 
@@ -92,12 +105,6 @@ FREAKING OUT TODO:
 
 - position status stuff programatically maybe?
 
--> make better assets
-	-> background
-	-> planet
-	-> black hole
-	-> other planets
-	-> black hole life bar
 - make music
 - get music in game
 - make sound effects
