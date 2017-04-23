@@ -54,6 +54,13 @@
 	-> other planets
 	-> black hole life bar
 	
+-> tweak player movement
+	-> stronger going with the current of gravity
+	
+-> TWEAK: holding movement key needs to increase effective rotation velocity (if in same dir)
+-> TWEAK: player needs way more mass
+
+	
 	
 FREAKING OUT TODO: 
 -> tiling background
@@ -79,6 +86,11 @@ FREAKING OUT TODO:
 - AI
 
 
+- BUG: rotation same with every planet at start
+
+- black hole a bit weaker closer in?
+
+- MORE: other planets
 
 
 
@@ -93,30 +105,18 @@ FREAKING OUT TODO:
 
 
 
-- tweak player movement
-	- stronger going with the current of gravity
-
 - black hole grows smoothly
 	- with easing?
 	- same with fullness bar -> http://answers.unity3d.com/questions/56555/increasing-an-gamobjects-transformlocalscale-by-1.html#answer-56558
 
-- tweak sizes?
-
-- TWEAK: holding movement key needs to increase effective rotation velocity (if in same dir)
-- TWEAK: player needs way more mass
-- BUG: rotation same with every planet at start
 - BUG: status stuff displays under planets
 - FEATURE: put in indicators to show where other planets are
-- TWEAK: camera leading and slack
-- TWEAK: camera "center" pushed lower by UI
 
 - too far from the stage = slowly drawn back in
 - try to get stable orbits running
 
 - if the planet getting sucked into the black hole's smaller than the hole - just suck it in (maybe shrink a bit)
 - otherwise, smooth it out - it looks crap
-
-- position status stuff programatically maybe?
 
 - make music
 - get music in game
@@ -126,9 +126,6 @@ FREAKING OUT TODO:
 - generate sacrificial lamb to get eaten first
 
 - levels?
-
-- TWEAK: planets not too close to each other at spawn maybe?
-- MORE: other planets
 
 - new name from http://www.azlyrics.com/lyrics/soundgarden/blackholesun.html ?
 

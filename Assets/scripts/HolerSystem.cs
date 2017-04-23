@@ -7,7 +7,7 @@ public class HolerSystem : MonoBehaviour {
     const float BLACK_HOLE_SCALE = 0.5F;
     const float BLACK_HOLE_MASS = 1000;
 
-    const float PLAYER_MASS = 30;
+    const float PLAYER_MASS = 20;
 
     const float PLANET_MIN_SCALE = 0.5F;
     const float PLANET_MAX_SCALE = 2.5F;
