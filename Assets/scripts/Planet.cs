@@ -23,10 +23,8 @@ public class Planet : MonoBehaviour {
         }
     }
 
-    void Start () {
+    void Awake() {
         _velocities = new List<Vector2>();
-
-        SetInitialVelocity();
     }
 
     void FixedUpdate() {
@@ -39,9 +37,9 @@ public class Planet : MonoBehaviour {
             return x - entropy;
         }).ToList();
 
-        SetVelocity();
-
         _velocities.RemoveAll(x => x.magnitude < BOUNCE_THRESHOLD);
+
+        SetVelocity();
     }
 
     void OnCollisionEnter2D(Collision2D other) {
@@ -64,20 +62,8 @@ public class Planet : MonoBehaviour {
         }
     }
 
-    private void SetInitialVelocity() {
-        var blackHoleObject = GameObject.Find("Black Hole");
-        var d = (Vector2)(blackHoleObject.transform.position - transform.position);
-        var dn = d.normalized;
-
-        var a = Random.value < 0.5
-            ? ROTATIONAL_ANGLE
-            : ROTATIONAL_ANGLE * -1;
-
-        dn = dn.Rotate(a);
-
-        var rigidComponent = GetComponent<Rigidbody2D>();
-
-        _velocities.Add(dn);
+    public void PushVelocity(Vector2 v) {
+        _velocities.Add(v);
     }
 
     private void SetVelocity() {

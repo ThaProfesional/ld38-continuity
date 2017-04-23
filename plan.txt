@@ -30,23 +30,27 @@
 	
 -> player dies = game over
 
-- randomly generate other planets
-- randomly generate mass
-- randomly position player
+-> randomly generate other planets
+-> randomly generate mass
+-> random images
+-> randomly position player
+-> script create black hole
+
+-> larger planets getting sucked into black hole bug
 
 - "arena size"
 
-- points
-
 - tie this together with game over
 	- regenerate level after death
+	
+- AI
 
 - camera moves around properly
 	- camera follow player
 	- UI sits properly at top of camera
 	- contents offset by ui kind of thing
-	
-- AI
+
+- points
 
 - tweak player movement
 	- weaker normally?
@@ -58,8 +62,13 @@
 
 - tweak sizes?
 
+- change planet velocity back to be a single value - not a list
+
 - too far from the stage = slowly drawn back in
 - try to get stable orbits running
+
+- if the planet getting sucked into the black hole's smaller than the hole - just suck it in (maybe shrink a bit)
+- otherwise, smooth it out - it looks crap
 
 - position status stuff programatically maybe?
 
@@ -76,7 +85,11 @@
 - make sound effects
 - get in game
 
+- generate sacrificial lamb to get eaten first
+
 - levels?
+
+- planets not too close to eachother at spawn maybe?
 
 - plan stage 2 => est. 30 minutes
 

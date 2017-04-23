@@ -23,6 +23,11 @@ public class BlackHole : MonoBehaviour {
     void OnTriggerStay2D(Collider2D other) {
         var blackHoleColliderComponent = GetComponent<Collider2D>();
 
+        other.transform.localScale = new Vector2(
+            other.transform.localScale.x * 0.5F,
+            other.transform.localScale.y * 0.5F
+        );
+
         if (blackHoleColliderComponent.bounds.Contains(other.bounds.min)
             && blackHoleColliderComponent.bounds.Contains(other.bounds.max)) {
             Grow(other.gameObject);

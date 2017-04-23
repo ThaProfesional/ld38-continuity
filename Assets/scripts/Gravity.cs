@@ -8,7 +8,7 @@ public class Gravity : MonoBehaviour {
 
     const float VELOCITY_CAP = 1.5F;
 
-    const float EVENT_HORIZON_VELOCITY = 3F;
+    const float EVENT_HORIZON_VELOCITY = 8F;
 
     const float GRAVITY_MODIFIER_GOOD_ANGLE = 0.05F;
     const float GRAVITY_MODIFIER_BAD_ANGLE = 1F;
