@@ -1,12 +1,13 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class HolerSystem : MonoBehaviour {
     const float BLACK_HOLE_SCALE = 0.5F;
     const float BLACK_HOLE_MASS = 1000;
 
-    const float PLAYER_MASS = 20;
+    const float PLAYER_MASS = 30;
 
     const float PLANET_MIN_SCALE = 0.5F;
     const float PLANET_MAX_SCALE = 2.5F;
@@ -15,7 +16,7 @@ public class HolerSystem : MonoBehaviour {
     const int PLANET_MAX_MASS = 50;
 
     const int MAX_TOTAL_PLANET_MASS = 200;
-    const int MAX_PLANETS = 8;
+    const int MAX_PLANETS = 1;//8;
 
     const int DANGER_ZONE = 5;
     const int EDGE = 20;
@@ -34,11 +35,7 @@ public class HolerSystem : MonoBehaviour {
 
     public int PlanetaryMass;
 
-    private PlanetTracker _planetTracker;
-
     void Awake() {
-        _planetTracker = gameObject.GetComponent<PlanetTracker>();
-
         Generate();
     }
 
@@ -71,7 +68,7 @@ public class HolerSystem : MonoBehaviour {
         CreatePlayer();
 
         // start countdown timer to DOOM!
-        // StartCoroutine("EnableHole");
+        StartCoroutine("EnableHole");
     }
 
     private void CreateBlackHole() {
@@ -93,16 +90,21 @@ public class HolerSystem : MonoBehaviour {
         var remainingMass = MAX_TOTAL_PLANET_MASS;
 
         for(var i = 0; i < MAX_PLANETS; i++) {
+            var randomScale = Random.Range(PLANET_MIN_SCALE, PLANET_MAX_SCALE);
+            var scale = new Vector2(randomScale, randomScale);
+
             var mass = Random.Range(PLANET_MIN_MASS, PLANET_MAX_MASS);
 
             if (mass > remainingMass)
                 mass = remainingMass;
 
-            var position = GetRandomPosition();
+            Vector3 position;
 
-            // make sure the planet's a bit away from the others
+            do {
+                position = GetRandomPosition();
+            } while(PlanetWillOverlap(scale, position));
 
-            CreatePlanet(i, mass, position);
+            CreatePlanet(i, mass, scale, position);
 
             remainingMass -= mass;
 
@@ -113,7 +115,18 @@ public class HolerSystem : MonoBehaviour {
         PlanetaryMass = MAX_TOTAL_PLANET_MASS - remainingMass;
     }
 
-    private void CreatePlanet(int num, int Mass, Vector3 position) {
+    private bool PlanetWillOverlap(Vector2 scale, Vector2 position) {
+        var bounds = new Bounds(position, scale);
+
+        // loop through all existing planets
+        return FindObjectsOfType<Planet>().Where(x => {
+            var collider = x.gameObject.GetComponent<CircleCollider2D>();
+
+            return collider.bounds.Intersects(bounds);
+        }).Any();
+    }
+
+    private void CreatePlanet(int num, int Mass, Vector2 scale, Vector3 position) {
         var planetInstance = (GameObject)Instantiate(Resources.Load("Planet"));
         planetInstance.transform.SetParent(transform);
 
@@ -121,8 +134,7 @@ public class HolerSystem : MonoBehaviour {
 
         planetInstance.transform.transform.position = position;
 
-        var randomScale = Random.Range(PLANET_MIN_SCALE, PLANET_MAX_SCALE);
-        planetInstance.transform.localScale = new Vector2(randomScale, randomScale);
+        planetInstance.transform.localScale = scale;
 
         var planetGravityComponent = planetInstance.GetComponent<Gravity>();
         planetGravityComponent.Mass = Mass;
@@ -134,8 +146,6 @@ public class HolerSystem : MonoBehaviour {
         planetColliderComponent.radius = planetSpriteRendererComponent.sprite.bounds.size.x / 2;
 
         SetInitialVelocity(planetInstance);
-
-        _planetTracker.AddPlanet(planetInstance);
     }
 
     private void CreatePlayer() {
@@ -150,8 +160,6 @@ public class HolerSystem : MonoBehaviour {
         playerGravityComponent.Mass = PLAYER_MASS;
 
         SetInitialVelocity(playerInstance);
-
-        _planetTracker.AddPlanet(playerInstance);
     }
 
     private Vector3 GetRandomPosition() {

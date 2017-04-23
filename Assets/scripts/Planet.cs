@@ -24,6 +24,9 @@ public class Planet : MonoBehaviour {
     }
 
     void FixedUpdate() {
+        if (OutOfBounds())
+            GetBackInBounds();
+
         var entropy = Velocity * ENTROPY_RATE;
 
         if (entropy.magnitude < BOUNCE_ENTROPY_MINIMUM)
@@ -33,9 +36,6 @@ public class Planet : MonoBehaviour {
 
         if (Velocity.magnitude <= BOUNCE_THRESHOLD)
             Velocity = new Vector2(0, 0);
-
-        if (OutOfBounds())
-            GetBackInBounds();
 
         SetVelocity();
     }

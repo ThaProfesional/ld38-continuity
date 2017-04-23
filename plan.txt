@@ -61,26 +61,39 @@ FREAKING OUT TODO:
 -> put in new text
 -> minimum on bounce
 -> proper arena bounds
-- indicators for stuff
-- don't spawn too close
 
-- keep writing this list
+-> don't spawn too close
 
+-> tweak way down rotational gravity for planets
 
+-> wider background
+-> bar background no overlap
+
+-> player can still go way out of bounds
+
+- tweak player movement
 
 - make sounds effects
 - make music
 
--tweak way down rotational gravity for planets
-
 - AI
+
+
+
+
+
+
+- indicators for stuff
+
+- keep writing this list
 
 - splash page instructions 
 
 - points
 
+
+
 - tweak player movement
-	- weaker normally?
 	- stronger going with the current of gravity
 
 - black hole grows smoothly

@@ -1,80 +1,40 @@
-﻿using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class PlanetTracker : MonoBehaviour {
-    const int UPDATE_PERIOD = 1;
+    private Camera _camera;
 
-    private IDictionary<string, PlanetaryPosition> _planets;
-
-    private int updateTracker;
-
-	void Start () {
-        _planets = new Dictionary<string, PlanetaryPosition>();
-
-        updateTracker = 0;
-    }
+	void Start() {
+        _camera = Camera.main;
+	}
 	
-	void Update () {
-        var blackHoleObject = GameObject.Find("Black Hole");
+	void Update() {
 
-        if (updateTracker == UPDATE_PERIOD) {
-            foreach (var planet in _planets) {
-                var planetObject = GameObject.Find(planet.Key);
+        //var player = GameObject.Find("Player");
 
-                _planets[planet.Key] = StorePosition(planetObject, blackHoleObject);
-            }
+        //UpdatePlanets(player);
 
-            updateTracker = 0;
-        } else {
-            updateTracker++;
+        // UpdateBlackHole(player);
+    }
+
+    private void UpdatePlanets(GameObject player) {
+        var planets = FindObjectsOfType<Planet>();
+
+        foreach(var planet in planets) {
+            if (!OnScreen(planet.gameObject))
+                DisplayIndicator(player, planet.gameObject, false);
         }
     }
 
-    public void AddPlanet(GameObject planetObject) {
-        var blackHoleObject = GameObject.Find("Black Hole");
-
-        var displacement = StorePosition(planetObject, blackHoleObject);
-
-        // _planets[planetObject.name] = displacement;
+    private bool OnScreen(GameObject gameObject) {
+        var renderer = gameObject.GetComponent<SpriteRenderer>();
+        return renderer.isVisible;
     }
 
-    public void RemovePlanet(GameObject planetObject) {
-        _planets.Remove(planetObject.name);
+    private void DisplayIndicator(GameObject player, GameObject gameObject, bool isBlackHole) {
+        var displacement = player.transform.position - gameObject.transform.position;
+
+        // check if it already exists (by name)
+
+        // if not - make it
     }
-
-    public float GetDistanceFromHole(GameObject planetObject) {
-        var displacement = _planets[planetObject.name];
-
-        return displacement.Magnitude;
-    }
-
-    public bool OutOfBounds(GameObject planetObject) {
-        var displacement = _planets[planetObject.name];
-
-        return displacement.Position.x > HolerSystem.EDGE
-            || displacement.Position.y > HolerSystem.EDGE;
-    }
-
-    /*public IList<string> GetClosePlanets(GameObject planetObject) {
-        var displacement = _planets[planetObject.name];
-        var orbit = displacement.Magnitude;
-
-        // get all the planets in a similar orbit
-
-        // filter down to those 
-
-        return new List<string>();
-    }*/
-
-    private PlanetaryPosition StorePosition(GameObject planetObject, GameObject blackHoleObject) {
-        return new PlanetaryPosition {
-            Position = planetObject.transform.position,
-            Magnitude = planetObject.transform.position.magnitude
-        };
-    }
-}
-
-public struct PlanetaryPosition {
-    public Vector2 Position;
-    public float Magnitude;
 }
