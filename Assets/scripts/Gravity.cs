@@ -78,13 +78,15 @@ public class Gravity : MonoBehaviour {
         var gravities = GetGravities();
 
         foreach (var body in gravities) {
+            var isBlackHole = body.gameObject.GetComponent<BlackHole>() != null;
+
             var d = GetDisplacement(body.transform.position);
             var dm = d.magnitude;
             var dn = d.normalized;
 
             var f = GetGravtiationalForce(body.Mass, dm);
 
-            if (f > THRESHOLD) {
+            if (f > THRESHOLD || isBlackHole) {
                 f = PerpetuateVelocity(f, rigidComponent);
 
                 var v = rigidComponent.velocity;

@@ -40,15 +40,26 @@
 
 -> tie this together with game over
 	-> regenerate level after death (r key)
-	
-- AI
 
-- camera moves around properly
-	- camera follow player
-	- UI sits properly at top of camera
-	- contents offset by ui kind of thing
+-> camera moves around properly
+	-> camera follow player
+	-> UI sits properly at top of camera
 	
-- "arena size"
+	
+FREAKING OUT TODO: 
+-> tiling background
+-> put in new bar
+- put in new text
+- proper arena bounds
+- minimum on bounce
+- indicators for stuff
+- don't spawn too close
+- keep writing this list
+
+- make sounds effects
+- make music
+- splash page instructions 
+- AI
 
 - points
 
@@ -58,11 +69,17 @@
 
 - black hole grows smoothly
 	- with easing?
-	- same with fullness bar
+	- same with fullness bar -> http://answers.unity3d.com/questions/56555/increasing-an-gamobjects-transformlocalscale-by-1.html#answer-56558
 
 - tweak sizes?
 
+- TWEAK: holding movement key needs to increase effective rotation velocity (if in same dir)
+- TWEAK: player needs way more mass
 - BUG: rotation same with every planet at start
+- BUG: status stuff displays under planets
+- FEATURE: put in indicators to show where other planets are
+- TWEAK: camera leading and slack
+- TWEAK: camera "center" pushed lower by UI
 
 - change planet velocity back to be a single value - not a list
 
@@ -74,14 +91,12 @@
 
 - position status stuff programatically maybe?
 
-- core gameplay mechanics stage 1 done?
-
-- make better assets
-	- background
-	- planet
-	- black hole
-	- other planets
-	- black hole life bar
+-> make better assets
+	-> background
+	-> planet
+	-> black hole
+	-> other planets
+	-> black hole life bar
 - make music
 - get music in game
 - make sound effects
@@ -91,9 +106,8 @@
 
 - levels?
 
-- planets not too close to eachother at spawn maybe?
-
-- plan stage 2 => est. 30 minutes
+- TWEAK: planets not too close to each other at spawn maybe?
+- MORE: other planets
 
 - new name from http://www.azlyrics.com/lyrics/soundgarden/blackholesun.html ?
 

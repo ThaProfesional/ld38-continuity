@@ -2,6 +2,7 @@
 
 public class Fullness : MonoBehaviour {
     private float _hunger;
+    private float _previousPercentage;
     private float _startMass;
 
 	void Start() {
@@ -15,22 +16,36 @@ public class Fullness : MonoBehaviour {
 
         var percentage = currentMass / _hunger;
 
-        SetPercentage(percentage);
+        if (percentage > _previousPercentage) {
+            SetPercentage(percentage);
 
-        if (percentage >= 1)
-            Win(blackHoleGravityComponent);
+            if (percentage >= 1)
+                Win(blackHoleGravityComponent);
+        }
     }
 
     public void Initialise() {
+        _previousPercentage = 0;
+
         var blackHoleGravityComponent = GetBlackHoleGravity();
         _startMass = blackHoleGravityComponent.Mass;
 
         var holerSystemComponent = GetHolerSystem();
         _hunger = holerSystemComponent.PlanetaryMass * 0.75F * BlackHole.MASS_MODIFIER;
 
-        SetGameOutcome("Lose", false);
+        ShowText("Lose", false);
+        ShowText("Lose Retry Text", false);
 
-        SetGameOutcome("Win", false);
+        ShowText("Win", false);
+        ShowText("Win Retry Text", false);
+    }
+
+    public void Lose() {
+        ShowText("Lose", true);
+        ShowText("Lose Retry Text", true);
+
+        ShowText("Win", false);
+        ShowText("Win Retry Text", false);
     }
 
     private HolerSystem GetHolerSystem() {
@@ -44,15 +59,17 @@ public class Fullness : MonoBehaviour {
     }
 
     private void SetPercentage(float percentage) {
-        var mask = GetMask();
+        var maskObject = GetMask();
+        var spriteRenderComponent = GetSpriteRenderComponent();
 
-        var maskPercentage = (percentage == 0)
-            ? 1
-            : 1 - percentage;
+        var barWidth = spriteRenderComponent.sprite.bounds.size.x;
 
-        mask.transform.localScale = new Vector2(
-            mask.transform.localScale.x,
-            maskPercentage
+        var xOffset = spriteRenderComponent.transform.position.x + (barWidth * percentage);
+
+        maskObject.transform.position = new Vector3(
+            xOffset,
+            maskObject.transform.position.y,
+            maskObject.transform.position.z
         );
     }
 
@@ -60,15 +77,22 @@ public class Fullness : MonoBehaviour {
         return transform.Find("Bar/Mask").gameObject;
     }
 
+    private SpriteRenderer GetSpriteRenderComponent() {
+        var spriteObject = transform.Find("Bar/Sprite").gameObject;
+        return spriteObject.GetComponent<SpriteRenderer>();
+    }
+
     private void Win(Gravity blackHoleGravityComponent) {
         blackHoleGravityComponent.DisablePull = true;
 
-        SetGameOutcome("Lose", false);
+        ShowText("Lose", false);
+        ShowText("Lose Retry Text", false);
 
-        SetGameOutcome("Win", true);
+        ShowText("Win", true);
+        ShowText("Win Retry Text", true);
     }
 
-    private void SetGameOutcome(string outcome, bool enabled) {
+    private void ShowText(string outcome, bool enabled) {
         var objectName = string.Format("Camera/{0}", outcome);
         var instance = GameObject.Find(objectName);
         var spriteRenderComponent = instance.GetComponent<SpriteRenderer>();

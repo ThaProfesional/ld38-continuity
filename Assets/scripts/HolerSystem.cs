@@ -4,7 +4,9 @@ using UnityEngine;
 
 public class HolerSystem : MonoBehaviour {
     const float BLACK_HOLE_SCALE = 0.5F;
-    const float BLACK_HOLE_MASS = 500;
+    const float BLACK_HOLE_MASS = 1000;
+
+    const float PLAYER_MASS = 20;
 
     const float PLANET_MIN_SCALE = 0.5F;
     const float PLANET_MAX_SCALE = 2.5F;
@@ -12,8 +14,8 @@ public class HolerSystem : MonoBehaviour {
     const int PLANET_MIN_MASS = 10;
     const int PLANET_MAX_MASS = 50;
 
-    const int MAX_TOTAL_PLANET_MASS = 250;
-    const int MAX_PLANETS = 10;
+    const int MAX_TOTAL_PLANET_MASS = 200;
+    const int MAX_PLANETS = 8;
 
     const int DANGER_ZONE = 5;
     const int EDGE = 20;
@@ -68,7 +70,7 @@ public class HolerSystem : MonoBehaviour {
         CreatePlayer();
 
         // start countdown timer to DOOM!
-        StartCoroutine("EnableHole");
+        // StartCoroutine("EnableHole");
     }
 
     private void CreateBlackHole() {
@@ -76,6 +78,8 @@ public class HolerSystem : MonoBehaviour {
         blackHoleInstance.transform.SetParent(transform);
 
         blackHoleInstance.name = "Black Hole";
+
+        blackHoleInstance.transform.transform.position = new Vector3(0, 0, 1);
 
         blackHoleInstance.transform.localScale = new Vector2(BLACK_HOLE_SCALE, BLACK_HOLE_SCALE);
 
@@ -87,7 +91,7 @@ public class HolerSystem : MonoBehaviour {
     private void CreatePlanets() {
         var remainingMass = MAX_TOTAL_PLANET_MASS;
 
-        for(var i = 0; i <= MAX_PLANETS; i++) {
+        for(var i = 0; i < MAX_PLANETS; i++) {
             var mass = Random.Range(PLANET_MIN_MASS, PLANET_MAX_MASS);
 
             if (mass > remainingMass)
@@ -97,7 +101,7 @@ public class HolerSystem : MonoBehaviour {
 
             // make sure the planet's a bit away from the others
 
-            CreatePlanet(mass, position);
+            CreatePlanet(i, mass, position);
 
             remainingMass -= mass;
 
@@ -108,9 +112,11 @@ public class HolerSystem : MonoBehaviour {
         PlanetaryMass = MAX_TOTAL_PLANET_MASS - remainingMass;
     }
 
-    private void CreatePlanet(int Mass, Vector2 position) {
+    private void CreatePlanet(int num, int Mass, Vector3 position) {
         var planetInstance = (GameObject)Instantiate(Resources.Load("Planet"));
         planetInstance.transform.SetParent(transform);
+
+        planetInstance.name = string.Format("Planet{0}", num);
 
         planetInstance.transform.transform.position = position;
 
@@ -133,12 +139,17 @@ public class HolerSystem : MonoBehaviour {
         var playerInstance = (GameObject)Instantiate(Resources.Load("Player"));
         playerInstance.transform.SetParent(transform);
 
+        playerInstance.name = "Player";
+
         playerInstance.transform.transform.position = GetRandomPosition();
+
+        var playerGravityComponent = playerInstance.GetComponent<Gravity>();
+        playerGravityComponent.Mass = PLAYER_MASS;
 
         SetInitialVelocity(playerInstance);
     }
 
-    private Vector2 GetRandomPosition() {
+    private Vector3 GetRandomPosition() {
         var x = Random.Range(DANGER_ZONE, EDGE);
 
         if (Random.value < 0.5F)
@@ -149,9 +160,10 @@ public class HolerSystem : MonoBehaviour {
         if (Random.value < 0.5F)
             y *= -1;
 
-        return new Vector2(
+        return new Vector3(
             x,
-            y
+            y,
+            1
         );
     }
 

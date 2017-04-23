@@ -55,16 +55,8 @@ public class BlackHole : MonoBehaviour {
         var gravityComponent = GetComponent<Gravity>();
         gravityComponent.DisablePull = true;
 
-        var winObject = GameObject.Find("Camera/Win");
-        var winSpriteRenderComponent = winObject.GetComponent<SpriteRenderer>();
-        winSpriteRenderComponent.enabled = false;
-
-        var loseObject = GameObject.Find("Camera/Lose");
-        var loseSpriteRenderComponent = loseObject.GetComponent<SpriteRenderer>();
-        loseSpriteRenderComponent.enabled = true;
-
-        var holerSystemObject = GameObject.Find("Holer System");
-        var holerSystemComponent = holerSystemObject.GetComponent<HolerSystem>();
-        holerSystemComponent.EnableReset = true;
+        var fullnessObject = GameObject.Find("Fullness");
+        var fullnessComponent = fullnessObject.GetComponent<Fullness>();
+        fullnessComponent.Lose();
     }
 }
