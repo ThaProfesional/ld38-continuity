@@ -49,11 +49,12 @@
 FREAKING OUT TODO: 
 -> tiling background
 -> put in new bar
-- put in new text
+-> put in new text
 - proper arena bounds
 - minimum on bounce
 - indicators for stuff
 - don't spawn too close
+
 - keep writing this list
 
 - make sounds effects
