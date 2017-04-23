@@ -16,7 +16,8 @@ public class Gravity : MonoBehaviour {
     const float GRAVITY_MODIFIER_MASS_MODIFIER = 0.0001F;
 
     const float ROTATIONAL_MODIFIER_SPARSE = 0.2F;
-    const float ROTATIONAL_MODIFIER_DENSE = 0.4F;
+    const float ROTATIONAL_MODIFIER_DENSE = 0.6F;
+    const float ROTATIONAL_MODIFIER_BLACK_HOLE = 1F;
 
     const float ROTATIONAL_CUTOFF_ANGLE = 35F;
 
@@ -95,7 +96,7 @@ public class Gravity : MonoBehaviour {
 
                 var v = rigidComponent.velocity;
 
-                gravitationalVelocity += CalculateGravitationalVelocity(v, dn, f, body.Mass, body.DisablePull);
+                gravitationalVelocity += CalculateGravitationalVelocity(v, dn, f, body.Mass, body.DisablePull, isBlackHole);
             }
         }
 
@@ -133,7 +134,7 @@ public class Gravity : MonoBehaviour {
         return f + gvm;
     }
 
-    private Vector2 CalculateGravitationalVelocity(Vector2 v, Vector2 dn, float f, float bodyMass, bool bodyDisablePull) {
+    private Vector2 CalculateGravitationalVelocity(Vector2 v, Vector2 dn, float f, float bodyMass, bool bodyDisablePull, bool isBlackHole) {
         var gravity = GetGravity(dn, f);
 
         var a = Vector2.Angle(v, dn);
@@ -145,7 +146,7 @@ public class Gravity : MonoBehaviour {
 
         return ShouldCrash(v, a, bodyDisablePull)
             ? GetGravitationalVelocity(bodyMass, gravity)
-            : GetRotationalVelocity(bodyMass, gravity, a, bodyDisablePull);
+            : GetRotationalVelocity(bodyMass, gravity, a, bodyDisablePull, isBlackHole);
     }
 
     private Vector2 GetGravity(Vector2 dn, float f) {
@@ -171,7 +172,7 @@ public class Gravity : MonoBehaviour {
         return gravity * GRAVITY_MODIFIER_BAD_ANGLE;
     }
 
-    private Vector2 GetRotationalVelocity(float bodyMass, Vector2 gravity, float a, bool bodyDisablePull) {
+    private Vector2 GetRotationalVelocity(float bodyMass, Vector2 gravity, float a, bool bodyDisablePull, bool isBlackHole) {
         var rotationalVelocity = new Vector2();
 
         var rotation = (a < 0)
@@ -182,7 +183,9 @@ public class Gravity : MonoBehaviour {
             if (!bodyDisablePull)
                 rotationalVelocity += gravity * CalculateGoodGravityMultiplier(bodyMass);
 
-            rotationalVelocity += rotation * ROTATIONAL_MODIFIER_DENSE;
+            var rotationalModifier = isBlackHole ? ROTATIONAL_MODIFIER_BLACK_HOLE : ROTATIONAL_MODIFIER_DENSE;
+
+            rotationalVelocity += rotation * rotationalModifier;
         }
         else {
             rotationalVelocity += rotation * ROTATIONAL_MODIFIER_SPARSE;

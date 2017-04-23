@@ -80,12 +80,19 @@ FREAKING OUT TODO:
 
 -> tweak player movement
 
-- make sounds effects
-- make music
+-> make sounds effects
+-> make music
 
-- AI
+-> AI - survive
+- AI - attack
 
-- tweak controls even more
+-> fix restart
+
+- bug where everything goes weird
+
+- music v2
+
+-> tweak controls even more
 
 
 - BUG: rotation same with every planet at start

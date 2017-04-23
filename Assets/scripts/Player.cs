@@ -4,8 +4,8 @@ public class Player : MonoBehaviour {
     const string HORIZONTAL_AXIS = "Horizontal";
     const string VERTICAL_AXIS = "Vertical";
 
-    const float HORITONZAL_SPEED = 3F;
-    const float VERTICAL_SPEED = 3F;
+    const float HORITONZAL_SPEED = 2.5F;
+    const float VERTICAL_SPEED = 2.5F;
 
     const float BOOST_THRESHOLD = 20F;
     const float LARGER_BOOST_THRESHOLD = 10F;
@@ -53,10 +53,7 @@ public class Player : MonoBehaviour {
     private void SetVelocity() {
         var velocity = _velocity;
 
-        var gravityComponent = GetComponent<Gravity>();
-
-        if (gravityComponent != null)
-            velocity += gravityComponent.Velocity;
+        velocity += _gravity.Velocity;
 
         var planetComponent = GetComponent<Planet>();
 

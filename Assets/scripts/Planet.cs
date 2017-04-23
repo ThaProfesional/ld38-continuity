@@ -6,6 +6,7 @@ public class Planet : MonoBehaviour {
     const float BOUNCE_THRESHOLD = 0.8F;
 
     const float MINIMUM_BOUNCE = 1F;
+    const float MAXIMUM_BOUNCE = 5F;
 
     const float START_VELOCITY = 0.1F;
 
@@ -15,9 +16,13 @@ public class Planet : MonoBehaviour {
 
     public Vector2 Velocity;
 
+    private AudioSource _audio;
+    private Gravity _gravity;
     private Rigidbody2D _rigid;
 
     private void Awake() {
+        _audio = GetComponent<AudioSource>();
+        _gravity = GetComponent<Gravity>();
         _rigid = GetComponent<Rigidbody2D>();
 
         Velocity = new Vector2();
@@ -48,13 +53,15 @@ public class Planet : MonoBehaviour {
         if (blackHoleComponent == null) {
             var v = new Vector2();
 
+            var planetGravityComponent = planet.GetComponent<Gravity>();
+
+            var mass = _gravity.Mass;
+            var planetMass = planetGravityComponent.Mass;
+
+            var isBigger = (mass > planetMass);
+            PlayAudio(other, isBigger);
+
             if (other.relativeVelocity.x != 0 || other.relativeVelocity.y != 0) {
-                var gravityComponent = GetComponent<Gravity>();
-                var planetGravityComponent = planet.GetComponent<Gravity>();
-
-                var mass = gravityComponent.Mass;
-                var planetMass = planetGravityComponent.Mass;
-
                 var massModifier = planetMass / (mass + planetMass);
 
                 v = other.relativeVelocity * massModifier * BOUNCE_MODIFIER;
@@ -62,23 +69,30 @@ public class Planet : MonoBehaviour {
 
             if (v.magnitude < MINIMUM_BOUNCE)
                 v = v.normalized * MINIMUM_BOUNCE;
+            else if (v.magnitude < MAXIMUM_BOUNCE)
+                v = v.normalized * MAXIMUM_BOUNCE;
 
             Velocity += v;
         }
     }
 
+    private void PlayAudio(Collision2D other, bool isBigger) {
+        if (gameObject.name == "Player")
+            _audio.Play();
+
+        if (other.gameObject.name != "Player" && isBigger)
+            _audio.Play();
+    }
+
     private void SetVelocity() {
         var velocity = Velocity;
+
+        velocity += _gravity.Velocity;
 
         var playerComponent = GetComponent<Player>();
 
         if (playerComponent != null)
             velocity += playerComponent.Velocity;
-
-        var gravityComponent = GetComponent<Gravity>();
-
-        if (gravityComponent != null)
-            velocity += gravityComponent.Velocity;
 
         _rigid.velocity = velocity;
     }
