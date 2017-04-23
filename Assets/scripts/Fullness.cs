@@ -4,17 +4,11 @@ public class Fullness : MonoBehaviour {
     private float _hunger;
     private float _startMass;
 
-	void Start () {
-        // TODO: make "HoleSystem" to spawn planets - with planet mass limit
-        // hunger should be 3/4 of that
-        // TODO: take into account black hole multiplier
-        _hunger = 50;
-
-        var blackHoleGravityComponent = GetBlackHoleGravity();
-        _startMass = blackHoleGravityComponent.Mass;
+	void Start() {
+        Initialise();
     }
-	
-	void Update () {
+
+    void Update () {
         var blackHoleGravityComponent = GetBlackHoleGravity();
 
         var currentMass = blackHoleGravityComponent.Mass - _startMass;
@@ -25,6 +19,23 @@ public class Fullness : MonoBehaviour {
 
         if (percentage >= 1)
             Win(blackHoleGravityComponent);
+    }
+
+    public void Initialise() {
+        var blackHoleGravityComponent = GetBlackHoleGravity();
+        _startMass = blackHoleGravityComponent.Mass;
+
+        var holerSystemComponent = GetHolerSystem();
+        _hunger = holerSystemComponent.PlanetaryMass * 0.75F * BlackHole.MASS_MODIFIER;
+
+        SetGameOutcome("Lose", false);
+
+        SetGameOutcome("Win", false);
+    }
+
+    private HolerSystem GetHolerSystem() {
+        var holerSystemObject = GameObject.Find("Holer System");
+        return holerSystemObject.GetComponent<HolerSystem>();
     }
 
     private Gravity GetBlackHoleGravity() {
@@ -52,12 +63,15 @@ public class Fullness : MonoBehaviour {
     private void Win(Gravity blackHoleGravityComponent) {
         blackHoleGravityComponent.DisablePull = true;
 
-        var loseObject = GameObject.Find("Camera/Lose");
-        var loseSpriteRenderComponent = loseObject.GetComponent<SpriteRenderer>();
-        loseSpriteRenderComponent.enabled = false;
+        SetGameOutcome("Lose", false);
 
-        var winObject = GameObject.Find("Camera/Win");
-        var winSpriteRenderComponent = winObject.GetComponent<SpriteRenderer>();
-        winSpriteRenderComponent.enabled = true;
+        SetGameOutcome("Win", true);
+    }
+
+    private void SetGameOutcome(string outcome, bool enabled) {
+        var objectName = string.Format("Camera/{0}", outcome);
+        var instance = GameObject.Find(objectName);
+        var spriteRenderComponent = instance.GetComponent<SpriteRenderer>();
+        spriteRenderComponent.enabled = enabled;
     }
 }

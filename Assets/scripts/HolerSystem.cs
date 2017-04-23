@@ -24,6 +24,8 @@ public class HolerSystem : MonoBehaviour {
 
     const float START_TIME = 5F;
 
+    public bool EnableReset;
+
     public readonly IList<string> PLANET_SPRITES = new List<string> {
         "planet",
         "planet-2"
@@ -31,7 +33,34 @@ public class HolerSystem : MonoBehaviour {
 
     public int PlanetaryMass;
 
-    void Start () {
+    void Awake() {
+        Generate();
+    }
+
+    private void Update() {
+        if (EnableReset && Input.GetKeyDown("r"))
+            Regenerate();
+    }
+
+    public void Regenerate() {
+        EnableReset = false;
+
+        Clear();
+
+        Generate();
+
+        var fullnessObject = GameObject.Find("Fullness");
+        var fullnessComponent = fullnessObject.GetComponent<Fullness>();
+        fullnessComponent.Initialise();
+    }
+
+    private void Clear() {
+        foreach (Transform child in transform) {
+            Destroy(child.gameObject);
+        }
+    }
+
+    private void Generate() {
         CreateBlackHole();
 
         CreatePlanets();
@@ -41,10 +70,6 @@ public class HolerSystem : MonoBehaviour {
         // start countdown timer to DOOM!
         StartCoroutine("EnableHole");
     }
-
-    void Update () {
-        
-	}
 
     private void CreateBlackHole() {
         var blackHoleInstance = (GameObject)Instantiate(Resources.Load("Black Hole"));

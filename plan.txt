@@ -38,10 +38,8 @@
 
 -> larger planets getting sucked into black hole bug
 
-- "arena size"
-
-- tie this together with game over
-	- regenerate level after death
+-> tie this together with game over
+	-> regenerate level after death (r key)
 	
 - AI
 
@@ -49,6 +47,8 @@
 	- camera follow player
 	- UI sits properly at top of camera
 	- contents offset by ui kind of thing
+	
+- "arena size"
 
 - points
 
@@ -61,6 +61,8 @@
 	- same with fullness bar
 
 - tweak sizes?
+
+- BUG: rotation same with every planet at start
 
 - change planet velocity back to be a single value - not a list
 

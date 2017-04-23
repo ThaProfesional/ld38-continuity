@@ -62,5 +62,9 @@ public class BlackHole : MonoBehaviour {
         var loseObject = GameObject.Find("Camera/Lose");
         var loseSpriteRenderComponent = loseObject.GetComponent<SpriteRenderer>();
         loseSpriteRenderComponent.enabled = true;
+
+        var holerSystemObject = GameObject.Find("Holer System");
+        var holerSystemComponent = holerSystemObject.GetComponent<HolerSystem>();
+        holerSystemComponent.EnableReset = true;
     }
 }
