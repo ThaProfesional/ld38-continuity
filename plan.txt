@@ -85,12 +85,18 @@ FREAKING OUT TODO:
 
 - AI
 
+- tweak controls even more
+
 
 - BUG: rotation same with every planet at start
 
-- black hole a bit weaker closer in?
+- splash page instructions 
+
 
 - MORE: other planets
+
+- black hole a bit weaker closer in?
+
 
 
 
@@ -99,7 +105,6 @@ FREAKING OUT TODO:
 
 - keep writing this list
 
-- splash page instructions 
 
 - points
 

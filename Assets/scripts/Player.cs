@@ -7,8 +7,8 @@ public class Player : MonoBehaviour {
     const float HORITONZAL_SPEED = 3F;
     const float VERTICAL_SPEED = 3F;
 
-    const float BOOST_THRESHOLD = 90F;
-    const float LARGER_BOOST_THRESHOLD = 30F;
+    const float BOOST_THRESHOLD = 20F;
+    const float LARGER_BOOST_THRESHOLD = 10F;
 
     const float BOOST = 1.5F;
     const float LARGER_BOOST = 2F;
