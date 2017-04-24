@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
 
 public class Fullness : MonoBehaviour {
-    private GameObject _blackHole;
     private GameObject _holerSystem;
     private GameObject _mask;
     private GameObject _sprite;
@@ -19,8 +18,10 @@ public class Fullness : MonoBehaviour {
     }
 
     void Update () {
-        if (_blackHole != null) {
-            var blackHoleGravityComponent = _blackHole.GetComponent<Gravity>();
+        var blackHole = GameObject.Find("Black Hole");
+
+        if (blackHole != null) {
+            var blackHoleGravityComponent = blackHole.GetComponent<Gravity>();
 
             if (blackHoleGravityComponent != null) {
                 var currentMass = blackHoleGravityComponent.Mass - _startMass;
@@ -34,17 +35,14 @@ public class Fullness : MonoBehaviour {
                         Win(blackHoleGravityComponent);
                 }
             }
-        } else {
-            _blackHole = GameObject.Find("Black Hole");
         }
     }
 
     public void Initialise() {
-        _blackHole = GameObject.Find("Black Hole");
-
         _previousPercentage = 0;
 
-        _startMass = _blackHole.GetComponent<Gravity>().Mass;
+        var blackHole = GameObject.Find("Black Hole");
+        _startMass = blackHole.GetComponent<Gravity>().OriginalMass;
         _hunger = _holerSystem.GetComponent<HolerSystem>().PlanetaryMass * 0.75F * BlackHole.MASS_MODIFIER;
 
         ShowText("Lose", false);

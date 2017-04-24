@@ -26,6 +26,7 @@ public class Gravity : MonoBehaviour {
     public bool DisablePull;
     public bool IsDoomed;
     public float Mass;
+    public float OriginalMass;
 
     private Vector2 _velocity;
     public Vector2 Velocity {
@@ -39,7 +40,9 @@ public class Gravity : MonoBehaviour {
             var rigidComponent = GetComponent<Rigidbody2D>();
 
             Mass = rigidComponent.mass;
-        } 
+        }
+
+        OriginalMass = Mass;
     }
 
     void FixedUpdate() {

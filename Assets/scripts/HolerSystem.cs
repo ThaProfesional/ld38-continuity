@@ -60,9 +60,14 @@ public class HolerSystem : MonoBehaviour {
     }
 
     private void Clear() {
+        // https://forum.unity3d.com/threads/deleting-all-chidlren-of-an-object.92827/
+        var children = new List<GameObject>();
+
         foreach (Transform child in transform) {
-            Destroy(child.gameObject);
+            children.Add(child.gameObject);
         }
+
+        children.ForEach(child => Destroy(child));
     }
 
     private void Generate() {
