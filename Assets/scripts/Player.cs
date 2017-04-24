@@ -14,6 +14,8 @@ public class Player : MonoBehaviour {
     const float LARGER_BOOST = 2F;
 
     private Gravity _gravity;
+    private Planet _planet;
+    private Rigidbody2D _rigid;
 
     private Vector2 _velocity;
     public Vector2 Velocity {
@@ -24,13 +26,13 @@ public class Player : MonoBehaviour {
 
     void Start () {
         _gravity = GetComponent<Gravity>();
+        _planet = GetComponent<Planet>();
+        _rigid = GetComponent<Rigidbody2D>();
     }
 	
 	void Update () {
         float horizontalMove = Input.GetAxis(HORIZONTAL_AXIS);
         float verticalMove = Input.GetAxis(VERTICAL_AXIS);
-
-        var rigidBodyComponent = GetComponent<Rigidbody2D>();
 
         var v = new Vector2(
             horizontalMove * HORITONZAL_SPEED,
@@ -51,17 +53,10 @@ public class Player : MonoBehaviour {
     }
 
     private void SetVelocity() {
-        var velocity = _velocity;
-
-        velocity += _gravity.Velocity;
-
-        var planetComponent = GetComponent<Planet>();
-
-        if (planetComponent != null)
-            velocity += planetComponent.Velocity;
+        var velocity = _velocity + _gravity.Velocity + _planet.Velocity;
 
         var rigidComponent = GetComponent<Rigidbody2D>();
 
-        rigidComponent.velocity = velocity;
+        _rigid.velocity = velocity;
     }
 }

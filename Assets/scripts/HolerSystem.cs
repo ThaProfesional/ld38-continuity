@@ -28,6 +28,8 @@ public class HolerSystem : MonoBehaviour {
 
     const float START_TIME = 5F;
 
+    private GameObject _fullness;
+
     public readonly IList<string> PLANET_SPRITES = new List<string> {
         "planet",
         "planet-2"
@@ -37,6 +39,10 @@ public class HolerSystem : MonoBehaviour {
 
     void Awake() {
         Generate();
+    }
+
+    void Start() {
+        _fullness = GameObject.Find("Fullness");
     }
 
     private void Update() {
@@ -49,8 +55,7 @@ public class HolerSystem : MonoBehaviour {
 
         Generate();
 
-        var fullnessObject = GameObject.Find("Fullness");
-        var fullnessComponent = fullnessObject.GetComponent<Fullness>();
+        var fullnessComponent = _fullness.GetComponent<Fullness>();
         fullnessComponent.Initialise();
     }
 

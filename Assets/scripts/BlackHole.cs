@@ -47,7 +47,6 @@ public class BlackHole : MonoBehaviour {
 
         var increase = planetGravityComponent.Mass / (gravityComponent.Mass + planetGravityComponent.Mass);
 
-        // TODO: deal with rounding errors
         gravityComponent.Mass += (int)(gravityComponent.Mass * increase * MASS_MODIFIER);
 
         transform.localScale += transform.localScale * increase * SIZE_MODIFIER;

@@ -1,7 +1,10 @@
 ﻿using UnityEngine;
 
 public class Fullness : MonoBehaviour {
+    private GameObject _blackHole;
     private GameObject _holerSystem;
+    private GameObject _mask;
+    private GameObject _sprite;
 
     private float _hunger;
     private float _previousPercentage;
@@ -9,35 +12,40 @@ public class Fullness : MonoBehaviour {
 
 	void Start() {
         _holerSystem = GameObject.Find("Holer System");
+        _mask = GameObject.Find("Bar/Mask");
+        _sprite = GameObject.Find("Bar/Sprite");
 
         Initialise();
     }
 
     void Update () {
-        var blackHoleGravityComponent = GetBlackHoleGravity();
+        if (_blackHole != null) {
+            var blackHoleGravityComponent = _blackHole.GetComponent<Gravity>();
 
-        if (blackHoleGravityComponent != null) {
-            var currentMass = blackHoleGravityComponent.Mass - _startMass;
+            if (blackHoleGravityComponent != null) {
+                var currentMass = blackHoleGravityComponent.Mass - _startMass;
 
-            var percentage = currentMass / _hunger;
+                var percentage = currentMass / _hunger;
 
-            if (percentage > _previousPercentage) {
-                SetPercentage(percentage);
+                if (percentage >= _previousPercentage) {
+                    SetPercentage(percentage);
 
-                if (percentage >= 1)
-                    Win(blackHoleGravityComponent);
+                    if (percentage >= 1)
+                        Win(blackHoleGravityComponent);
+                }
             }
+        } else {
+            _blackHole = GameObject.Find("Black Hole");
         }
     }
 
     public void Initialise() {
+        _blackHole = GameObject.Find("Black Hole");
+
         _previousPercentage = 0;
 
-        var blackHoleGravityComponent = GetBlackHoleGravity();
-        _startMass = blackHoleGravityComponent.Mass;
-
-        var holerSystemComponent = GetHolerSystem();
-        _hunger = holerSystemComponent.PlanetaryMass * 0.75F * BlackHole.MASS_MODIFIER;
+        _startMass = _blackHole.GetComponent<Gravity>().Mass;
+        _hunger = _holerSystem.GetComponent<HolerSystem>().PlanetaryMass * 0.75F * BlackHole.MASS_MODIFIER;
 
         ShowText("Lose", false);
         ShowText("Lose Retry Text", false);
@@ -45,7 +53,7 @@ public class Fullness : MonoBehaviour {
         ShowText("Win", false);
         ShowText("Win Retry Text", false);
     }
-
+    
     public void Lose() {
         ShowText("Lose", true);
         ShowText("Lose Retry Text", true);
@@ -54,38 +62,18 @@ public class Fullness : MonoBehaviour {
         ShowText("Win Retry Text", false);
     }
 
-    private HolerSystem GetHolerSystem() {
-        var holerSystemObject = GameObject.Find("Holer System");
-        return holerSystemObject.GetComponent<HolerSystem>();
-    }
-
-    private Gravity GetBlackHoleGravity() {
-        var blackHoleObject = GameObject.Find("Black Hole");
-        return blackHoleObject.GetComponent<Gravity>();
-    }
-
     private void SetPercentage(float percentage) {
-        var maskObject = GetMask();
-        var spriteRenderComponent = GetSpriteRenderComponent();
+        var spriteRenderComponent = _sprite.GetComponent<SpriteRenderer>();
 
         var barWidth = spriteRenderComponent.sprite.bounds.size.x;
 
         var xOffset = spriteRenderComponent.transform.position.x + (barWidth * percentage);
 
-        maskObject.transform.position = new Vector3(
+        _mask.transform.position = new Vector3(
             xOffset,
-            maskObject.transform.position.y,
-            maskObject.transform.position.z
+            _mask.transform.position.y,
+            _mask.transform.position.z
         );
-    }
-
-    private GameObject GetMask() {
-        return transform.Find("Bar/Mask").gameObject;
-    }
-
-    private SpriteRenderer GetSpriteRenderComponent() {
-        var spriteObject = transform.Find("Bar/Sprite").gameObject;
-        return spriteObject.GetComponent<SpriteRenderer>();
     }
 
     private void Win(Gravity blackHoleGravityComponent) {

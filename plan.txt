@@ -84,11 +84,16 @@ FREAKING OUT TODO:
 -> make music
 
 -> AI - survive
-- AI - attack
+-> AI - attack
 
 -> fix restart
 
-- bug where everything goes weird
+-> reset doesn't reset score :S
+-> tweak AI attack to run from outside
+-> AI to defend
+
+-> bug where everything goes weird
+
 
 - music v2
 

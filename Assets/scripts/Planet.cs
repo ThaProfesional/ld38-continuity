@@ -5,8 +5,10 @@ public class Planet : MonoBehaviour {
     const float BOUNCE_ENTROPY_MINIMUM = 0.4F;
     const float BOUNCE_THRESHOLD = 0.8F;
 
-    const float MINIMUM_BOUNCE = 1F;
+    const float MINIMUM_BOUNCE = 3F;
     const float MAXIMUM_BOUNCE = 5F;
+
+    const float MAXIMUM_VELOCITY = 20F;
 
     const float START_VELOCITY = 0.1F;
 
@@ -18,11 +20,13 @@ public class Planet : MonoBehaviour {
 
     private AudioSource _audio;
     private Gravity _gravity;
+    private Player _player;
     private Rigidbody2D _rigid;
 
     private void Awake() {
         _audio = GetComponent<AudioSource>();
         _gravity = GetComponent<Gravity>();
+        _player = GetComponent<Player>();
         _rigid = GetComponent<Rigidbody2D>();
 
         Velocity = new Vector2();
@@ -39,8 +43,12 @@ public class Planet : MonoBehaviour {
 
         Velocity -= entropy;
 
-        if (Velocity.magnitude <= BOUNCE_THRESHOLD)
+        var vm = Velocity.magnitude;
+
+        if (vm <= BOUNCE_THRESHOLD)
             Velocity = new Vector2(0, 0);
+        else if (vm > MAXIMUM_VELOCITY)
+            Velocity = Velocity.normalized * MAXIMUM_VELOCITY;
 
         SetVelocity();
     }
@@ -69,11 +77,18 @@ public class Planet : MonoBehaviour {
 
             if (v.magnitude < MINIMUM_BOUNCE)
                 v = v.normalized * MINIMUM_BOUNCE;
-            else if (v.magnitude < MAXIMUM_BOUNCE)
-                v = v.normalized * MAXIMUM_BOUNCE;
 
             Velocity += v;
         }
+    }
+
+    public Vector2 GetVelocity() {
+        var velocity = Velocity + _gravity.Velocity;
+
+        if (_player != null)
+            velocity += _player.Velocity;
+
+        return velocity;
     }
 
     private void PlayAudio(Collision2D other, bool isBigger) {
@@ -85,16 +100,7 @@ public class Planet : MonoBehaviour {
     }
 
     private void SetVelocity() {
-        var velocity = Velocity;
-
-        velocity += _gravity.Velocity;
-
-        var playerComponent = GetComponent<Player>();
-
-        if (playerComponent != null)
-            velocity += playerComponent.Velocity;
-
-        _rigid.velocity = velocity;
+        _rigid.velocity = GetVelocity();
     }
 
     private bool OutOfBounds() {
